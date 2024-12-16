@@ -49,7 +49,7 @@
 extern const u8 EventScript_ResetAllMapFlags[];
 
 static void ClearFrontierRecord(void);
-static void WarpToTruck(void);
+static void WarpToHouse(void);
 static void ResetMiniGamesRecords(void);
 
 EWRAM_DATA bool8 gDifferentSaveFile = FALSE;
@@ -124,9 +124,11 @@ static void ClearFrontierRecord(void)
     gSaveBlock2Ptr->frontier.opponentNames[1][0] = EOS;
 }
 
-static void WarpToTruck(void)
+static void WarpToHouse(void)
 {
     SetWarpDestination(MAP_GROUP(LITTLEROOT_TOWN_BRENDANS_HOUSE_2F), MAP_NUM(LITTLEROOT_TOWN_BRENDANS_HOUSE_2F), WARP_ID_NONE, 1, 4);
+    // Clock gets set in intro now
+    FlagSet(FLAG_SET_WALL_CLOCK);
     WarpIntoMap();
 }
 
@@ -192,7 +194,7 @@ void NewGameInitData(void)
     InitDewfordTrend();
     ResetFanClub();
     ResetLotteryCorner();
-    WarpToTruck();
+    WarpToHouse();
     RunScriptImmediately(EventScript_ResetAllMapFlags);
     ResetMiniGamesRecords();
     InitUnionRoomChatRegisteredTexts();

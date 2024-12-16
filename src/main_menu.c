@@ -1730,7 +1730,7 @@ static void Task_NewGameBirchSpeech_AreYouReady(u8 taskId)
         gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
         gTasks[taskId].tPlayerSpriteId = spriteId;
         NewGameBirchSpeech_StartFadeInTarget1OutTarget2(taskId, 2);
-        //NewGameBirchSpeech_StartFadePlatformOut(taskId, 1);
+        NewGameBirchSpeech_StartFadePlatformIn(taskId, 1);
         StringExpandPlaceholders(gStringVar4, gText_Birch_AreYouReady);
         AddTextPrinterForMessage(TRUE);
         gTasks[taskId].func = Task_NewGameBirchSpeech_ShrinkPlayer;
