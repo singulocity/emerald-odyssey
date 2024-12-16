@@ -339,6 +339,7 @@ extern const u8 gText_MysteryGiftCantUse[];
 extern const u8 gText_MysteryEventsCantUse[];
 extern const u8 gText_Singulo_Welcome[];
 extern const u8 gText_Singulo_Dream[];
+extern const u8 gText_Singulo_SelectTime[];
 extern const u8 gText_Birch_AndYouAre[];
 extern const u8 gText_Birch_BoyOrGirl[];
 extern const u8 gText_Birch_WhatsYourName[];

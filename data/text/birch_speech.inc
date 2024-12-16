@@ -13,6 +13,10 @@ gText_Singulo_Dream::
 	.string "I hope you like it!\p"
 	.string "$"
 
+gText_Singulo_SelectTime::
+	.string "What time is it right now?\p"
+	.string "$"
+
 gText_Birch_AndYouAre::
 	.string "Let's make your character.$"
 
