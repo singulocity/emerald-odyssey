@@ -45,6 +45,8 @@
 #include "mystery_gift.h"
 #include "union_room_chat.h"
 #include "constants/items.h"
+#include "save_location.h"
+#include "script_pokemon_util.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 
@@ -127,8 +129,48 @@ static void ClearFrontierRecord(void)
 static void WarpToHouse(void)
 {
     SetWarpDestination(MAP_GROUP(LITTLEROOT_TOWN_BRENDANS_HOUSE_2F), MAP_NUM(LITTLEROOT_TOWN_BRENDANS_HOUSE_2F), WARP_ID_NONE, 1, 4);
-    // Clock gets set in intro now
+    
+    // Skip the littleroot intro
     FlagSet(FLAG_SET_WALL_CLOCK);
+    VarSet(VAR_LITTLEROOT_INTRO_STATE, 7);
+    VarSet(VAR_LITTLEROOT_TOWN_STATE, 4);
+    VarSet(VAR_LITTLEROOT_RIVAL_STATE, 4);
+    VarSet(VAR_BIRCH_LAB_STATE, 5);
+    VarSet(VAR_CABLE_CLUB_TUTORIAL_STATE, 1);
+    VarSet(VAR_ROUTE101_STATE, 3);
+    VarSet(VAR_LITTLEROOT_HOUSES_STATE_BRENDAN, 2);
+    VarSet(VAR_LITTLEROOT_HOUSES_STATE_MAY, 2);
+    FlagClear(FLAG_HIDE_MAP_NAME_POPUP);
+    FlagClear(FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH);
+    FlagSet(FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE);
+    FlagSet(FLAG_HIDE_ROUTE_101_ZIGZAGOON);
+    FlagSet(FLAG_RECEIVED_POKEDEX_FROM_BIRCH);
+    FlagSet(FLAG_ADVENTURE_STARTED);
+    FlagSet(FLAG_RESCUED_BIRCH);
+    FlagSet(FLAG_SYS_B_DASH);
+    FlagSet(FLAG_SYS_POKEDEX_GET);
+    SetUnlockedPokedexFlags();
+    FlagSet(FLAG_RECEIVED_RUNNING_SHOES);
+    FlagSet(FLAG_SYS_POKEMON_GET);
+    FlagSet(FLAG_SYS_TV_HOME);
+    FlagSet(FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_1);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_2);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_MOM);
+	FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_SIBLING);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F_POKE_BALL);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_MOM);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_2F_POKE_BALL);
+    FlagClear(FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH);
+    FlagSet(FLAG_DEFEATED_RIVAL_ROUTE103);
+    FlagSet(FLAG_MET_RIVAL_MOM);
+    FlagClear(FLAG_SYS_TV_WATCH);
+
+    *GetVarPointer(VAR_STARTER_MON) = SPECIES_LUGIA;
+    ScriptGiveMon(SPECIES_LUGIA, 70, ITEM_NONE, 0, 0, 0);
+
     WarpIntoMap();
 }
 
@@ -194,8 +236,8 @@ void NewGameInitData(void)
     InitDewfordTrend();
     ResetFanClub();
     ResetLotteryCorner();
-    WarpToHouse();
     RunScriptImmediately(EventScript_ResetAllMapFlags);
+    WarpToHouse();
     ResetMiniGamesRecords();
     InitUnionRoomChatRegisteredTexts();
     InitLilycoveLady();

@@ -1668,25 +1668,27 @@ static void Task_NewGameBirchSpeech_SlidePlatformAway2(u8 taskId)
 static void Task_NewGameBirchSpeech_ReshowBirchLotad(u8 taskId)
 {
     u8 spriteId;
-
-    gSprites[gTasks[taskId].tBrendanSpriteId].invisible = TRUE;
-    gSprites[gTasks[taskId].tMaySpriteId].invisible = TRUE;
-    spriteId = gTasks[taskId].tBirchSpriteId;
-    gSprites[spriteId].x = 136;
-    gSprites[spriteId].y = 60;
-    gSprites[spriteId].invisible = FALSE;
-    gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
-    spriteId = gTasks[taskId].tLotadSpriteId;
-    gSprites[spriteId].x = 100;
-    gSprites[spriteId].y = 75;
-    gSprites[spriteId].invisible = FALSE;
-    gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
-    NewGameBirchSpeech_StartFadeInTarget1OutTarget2(taskId, 2);
-    NewGameBirchSpeech_StartFadePlatformIn(taskId, 1);
-    NewGameBirchSpeech_ClearWindow(0);
-    StringExpandPlaceholders(gStringVar4, gText_Birch_YourePlayer);
-    AddTextPrinterForMessage(TRUE);
-    gTasks[taskId].func = Task_NewGameBirchSpeech_WaitForSpriteFadeInAndTextPrinter;
+    if (gTasks[taskId].tIsDoneFadingSprites)
+    {
+        gSprites[gTasks[taskId].tBrendanSpriteId].invisible = TRUE;
+        gSprites[gTasks[taskId].tMaySpriteId].invisible = TRUE;
+        spriteId = gTasks[taskId].tBirchSpriteId;
+        gSprites[spriteId].x = 136;
+        gSprites[spriteId].y = 60;
+        gSprites[spriteId].invisible = FALSE;
+        gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
+        spriteId = gTasks[taskId].tLotadSpriteId;
+        gSprites[spriteId].x = 100;
+        gSprites[spriteId].y = 75;
+        gSprites[spriteId].invisible = FALSE;
+        gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
+        NewGameBirchSpeech_StartFadeInTarget1OutTarget2(taskId, 2);
+        NewGameBirchSpeech_StartFadePlatformOut(taskId, 1);
+        NewGameBirchSpeech_ClearWindow(0);
+        StringExpandPlaceholders(gStringVar4, gText_Birch_YourePlayer);
+        AddTextPrinterForMessage(TRUE);
+        gTasks[taskId].func = Task_NewGameBirchSpeech_WaitForSpriteFadeInAndTextPrinter;
+    }
 }
 
 static void Task_NewGameBirchSpeech_WaitForSpriteFadeInAndTextPrinter(u8 taskId)
@@ -1710,31 +1712,22 @@ static void Task_NewGameBirchSpeech_WaitForSpriteFadeInAndTextPrinter(u8 taskId)
 static void Task_NewGameBirchSpeech_AreYouReady(u8 taskId)
 {
     u8 spriteId;
-
-    if (gTasks[taskId].tIsDoneFadingSprites)
-    {
-        gSprites[gTasks[taskId].tBirchSpriteId].invisible = TRUE;
-        gSprites[gTasks[taskId].tLotadSpriteId].invisible = TRUE;
-        if (gTasks[taskId].tTimer)
-        {
-            gTasks[taskId].tTimer--;
-            return;
-        }
-        if (gSaveBlock2Ptr->playerGender != MALE)
-            spriteId = gTasks[taskId].tMaySpriteId;
-        else
-            spriteId = gTasks[taskId].tBrendanSpriteId;
-        gSprites[spriteId].x = 120;
-        gSprites[spriteId].y = 60;
-        gSprites[spriteId].invisible = FALSE;
-        gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
-        gTasks[taskId].tPlayerSpriteId = spriteId;
-        NewGameBirchSpeech_StartFadeInTarget1OutTarget2(taskId, 2);
-        NewGameBirchSpeech_StartFadePlatformIn(taskId, 1);
-        StringExpandPlaceholders(gStringVar4, gText_Birch_AreYouReady);
-        AddTextPrinterForMessage(TRUE);
-        gTasks[taskId].func = Task_NewGameBirchSpeech_ShrinkPlayer;
-    }
+    gSprites[gTasks[taskId].tBirchSpriteId].invisible = TRUE;
+    gSprites[gTasks[taskId].tLotadSpriteId].invisible = TRUE;
+    if (gSaveBlock2Ptr->playerGender != MALE)
+        spriteId = gTasks[taskId].tMaySpriteId;
+    else
+        spriteId = gTasks[taskId].tBrendanSpriteId;
+    gSprites[spriteId].x = 120;
+    gSprites[spriteId].y = 60;
+    gSprites[spriteId].invisible = FALSE;
+    gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
+    gTasks[taskId].tPlayerSpriteId = spriteId;
+    NewGameBirchSpeech_StartFadeInTarget1OutTarget2(taskId, 2);
+    NewGameBirchSpeech_StartFadePlatformOut(taskId, 1);
+    StringExpandPlaceholders(gStringVar4, gText_Birch_AreYouReady);
+    AddTextPrinterForMessage(TRUE);
+    gTasks[taskId].func = Task_NewGameBirchSpeech_ShrinkPlayer;
 }
 
 static void Task_NewGameBirchSpeech_ShrinkPlayer(u8 taskId)
@@ -1795,7 +1788,6 @@ static void Task_NewGameBirchSpeech_Cleanup(u8 taskId)
 
 static void CB2_NewGameSinguloSpeech_ReturnFromClock(void) {
     u8 taskId;
-    u8 spriteId;
     u16 savedIme;
 
     ResetBgsAndClearDma3BusyFlags(0);
@@ -1809,6 +1801,7 @@ static void CB2_NewGameSinguloSpeech_ReturnFromClock(void) {
     SetGpuReg(REG_OFFSET_BG0CNT, 0);
     SetGpuReg(REG_OFFSET_BG2HOFS, 0);
     SetGpuReg(REG_OFFSET_BG2VOFS, 0);
+    SetGpuReg(REG_OFFSET_BG1HOFS, 0);
     SetGpuReg(REG_OFFSET_BG1VOFS, 0);
     SetGpuReg(REG_OFFSET_BG0HOFS, 0);
     SetGpuReg(REG_OFFSET_BG0VOFS, 0);
@@ -1819,6 +1812,7 @@ static void CB2_NewGameSinguloSpeech_ReturnFromClock(void) {
     LZ77UnCompVram(sBirchSpeechShadowGfx, (u8 *)VRAM);
     LZ77UnCompVram(sBirchSpeechBgMap, (u8 *)(BG_SCREEN_ADDR(7)));
     LoadPalette(sBirchSpeechBgPals, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
+    LoadPalette(&sBirchSpeechBgGradientPal[0], BG_PLTT_ID(0) + 1, PLTT_SIZEOF(8));
     ResetTasks();
     taskId = CreateTask(Task_NewGameSinguloSpeech_ReturnFromClockShowTextbox, 0);
     gTasks[taskId].tTimer = 5;
@@ -2373,7 +2367,7 @@ static void Task_NewGameSinguloSpeech_ReturnFromClockShowTextbox(u8 taskId)
     if (gTasks[taskId].tTimer-- <= 0)
     {
         NewGameBirchSpeech_ShowDialogueWindow(0, 1);
-        gTasks[taskId].func = Task_NewGameBirchSpeech_ReshowBirchLotad;
+        gTasks[taskId].func = Task_NewGameBirchSpeech_AreYouReady;
     }
 }
 

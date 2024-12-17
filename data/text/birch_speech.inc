@@ -35,7 +35,9 @@ gText_Birch_YourePlayer::
 	.string "$"
 
 gText_Birch_AreYouReady::
+	.string "That should be everything!\p"
 	.string "Enjoy exploring the mysterious world of\n"
 	.string "POKéMON!\p"
-	.string "Come find me again and we can chat!\p"
+	.string "Come find me again soon and we can\n"
+	.string "chat!\p"
 	.string "$"
