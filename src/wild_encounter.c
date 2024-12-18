@@ -58,7 +58,6 @@ static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildM
 static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildMon, u8 type, u8 ability, u8 *monIndex);
 #endif
 static bool8 IsAbilityAllowingEncounter(u8 level);
-static u8 GetPartyMaxLevel(void);
 
 EWRAM_DATA static u8 sWildEncountersDisabled = 0;
 EWRAM_DATA static u32 sFeebasRngValue = 0;
@@ -284,6 +283,7 @@ static u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon)
         min = wildPokemon->maxLevel;
         max = wildPokemon->minLevel;
     }
+
     range = max - min + 1;
     rand = Random() % range;
 
@@ -300,24 +300,8 @@ static u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon)
                 rand--;
         }
     }
-    return GetPartyMaxLevel() + rand;
-}
-
-static u8 GetPartyMaxLevel(void)
-{
-    u8 maxLevel = GetMonData(&gPlayerParty[0], MON_DATA_LEVEL);
-    u8 i;
-    u8 level;
-
-    for (i = 0; i < gPlayerPartyCount; i++)
-    {
-        level = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
-        if (level > maxLevel)
-        {
-            maxLevel = level;
-        }
-    }
-    return maxLevel;
+    
+    return min + rand;
 }
 
 static u16 GetCurrentMapWildMonHeaderId(void)

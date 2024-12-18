@@ -47,6 +47,7 @@
 #include "constants/items.h"
 #include "save_location.h"
 #include "script_pokemon_util.h"
+#include "item.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 
@@ -250,8 +251,8 @@ static void SkipIntro(void)
     FlagSet(FLAG_MET_RIVAL_MOM);
     FlagClear(FLAG_SYS_TV_WATCH);
 
-    ScriptGiveMon(SPECIES_LUGIA, 70, ITEM_NONE, 0, 0, 0);
-    ScriptGiveMon(SPECIES_TYRANITAR, 55, ITEM_NONE, 0, 0, 0);
+    ScriptGiveMon(SPECIES_MUDKIP, 5, ITEM_NONE, 0, 0, 0);
+    AddBagItem(ITEM_POKE_BALL, 5);
 }
 
 static void ResetMiniGamesRecords(void)
