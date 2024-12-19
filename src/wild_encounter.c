@@ -21,6 +21,7 @@
 #include "constants/items.h"
 #include "constants/layouts.h"
 #include "constants/weather.h"
+#include <math.h>
 
 extern const u8 EventScript_RepelWoreOff[];
 
@@ -58,6 +59,7 @@ static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildM
 static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildMon, u8 type, u8 ability, u8 *monIndex);
 #endif
 static bool8 IsAbilityAllowingEncounter(u8 level);
+static int GetNumOwnedBadges(void);
 
 EWRAM_DATA static u8 sWildEncountersDisabled = 0;
 EWRAM_DATA static u32 sFeebasRngValue = 0;
@@ -272,18 +274,9 @@ static u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon)
     u8 range;
     u8 rand;
 
-    // Make sure minimum level is less than maximum level
-    if (wildPokemon->maxLevel >= wildPokemon->minLevel)
-    {
-        min = wildPokemon->minLevel;
-        max = wildPokemon->maxLevel;
-    }
-    else
-    {
-        min = wildPokemon->maxLevel;
-        max = wildPokemon->minLevel;
-    }
-
+    max = (GetNumOwnedBadges() * 5.25) + 5.25;
+    max = ceil(max);
+    min = max - 3;
     range = max - min + 1;
     rand = Random() % range;
 
@@ -302,6 +295,31 @@ static u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon)
     }
     
     return min + rand;
+}
+
+static const u16 sBadgeFlags[NUM_BADGES] =
+{
+    FLAG_BADGE01_GET,
+    FLAG_BADGE02_GET,
+    FLAG_BADGE03_GET,
+    FLAG_BADGE04_GET,
+    FLAG_BADGE05_GET,
+    FLAG_BADGE06_GET,
+    FLAG_BADGE07_GET,
+    FLAG_BADGE08_GET,
+};
+
+static int GetNumOwnedBadges(void)
+{
+    u32 i;
+
+    for (i = 0; i < NUM_BADGES; i++)
+    {
+        if (!FlagGet(sBadgeFlags[i]))
+            break;
+    }
+
+    return i;
 }
 
 static u16 GetCurrentMapWildMonHeaderId(void)
