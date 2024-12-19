@@ -21,7 +21,6 @@
 #include "constants/items.h"
 #include "constants/layouts.h"
 #include "constants/weather.h"
-#include <math.h>
 
 extern const u8 EventScript_RepelWoreOff[];
 
@@ -274,8 +273,7 @@ static u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon)
     u8 range;
     u8 rand;
 
-    max = (GetNumOwnedBadges() * 5.25) + 5.25;
-    max = ceil(max);
+    max = (GetNumOwnedBadges() * 5) + 5;
     min = max - 3;
     range = max - min + 1;
     rand = Random() % range;
